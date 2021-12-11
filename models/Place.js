@@ -6,19 +6,23 @@ const placeSchema = ({
         type: String,
         required: true,
     },
-    longitude: {
+    lon: {
         type: Number,
         required: true
     },
-    latitude: {
+    lat: {
         type: Number,
         required: true
     },
-    thumbnail: {
+    images: {
         type: String,
         required: true
     },
-    description: {
+    category: {
+        type: String,
+        required: true
+    },
+    desc: {
         type: String,
         required: true,
         max: 500
@@ -28,6 +32,11 @@ const placeSchema = ({
         required: true,
         default: 'Not Available'
     },
+    is_approved: {
+        type: Boolean,
+        default: false,
+        required: true
+    },
     is_deleted: {
         type: Boolean,
         default: false,
@@ -35,7 +44,8 @@ const placeSchema = ({
     },
     createdBy:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'userSchema'
+        ref: 'userSchema',
+        default: null
     },
     created_at: {
         type: Date,
@@ -49,4 +59,6 @@ const placeSchema = ({
     }
 })
 
-module.exports = placeSchema
+const placeModel = new mongoose.model('place', placeSchema)
+
+module.exports = placeModel

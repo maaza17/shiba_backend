@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const passport = require('passport')
 
 const users = require('./routes/api/users')
+const places = require('./routes/api/places')
 
 const app = express()
 app.use(express.urlencoded({extended: true}))
@@ -18,6 +19,7 @@ app.use(passport.initialize())
 require('./config/passport')(passport)
 
 app.use('/api/users', users)
+app.use('/api/places', places)
 
 const port = 9002 || process.env.PORT
 app.listen(port, () => console.log('Server is live on port ' + port + '!'))
