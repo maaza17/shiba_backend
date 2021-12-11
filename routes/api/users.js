@@ -192,8 +192,8 @@ router.post('/deleteuser', (req, res) => {
     })
 })
 
-// Undo delete user
-router.post('/undodeleteuser', (req, res) => {
+// Restore user
+router.post('/restoreuser', (req, res) => {
     const email = req.body.email
     userModel.findOneAndUpdate({email: email, is_deleted: true}, {is_deleted: false}, (err, doc) => {
         if(err){
@@ -204,7 +204,7 @@ router.post('/undodeleteuser', (req, res) => {
         } else {
             return res.status(200).json({
                 error: false,
-                message: 'Undo delete successful!'
+                message: 'User restoration successful!'
             })
         }
     })
