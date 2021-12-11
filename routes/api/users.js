@@ -72,7 +72,7 @@ router.post('/login', (req, res)=>{
     const password = req.body.password
 
     // Find User by email
-    userModel.findOne({email})
+    userModel.findOne({email: email, is_deleted: false})
         .then(user => {
             // Check if user exists
             if(!user){
@@ -102,16 +102,23 @@ router.post('/login', (req, res)=>{
         })
 })
 
+
+// Update user password
 router.post('/updatepassword', (req, res) => {
     const {email, currPassword, newPassword} = req.body
 
-    userModel.findOne({email: email}, (err, doc) => {
+    userModel.findOne({email: email, is_deleted: false}, (err, doc) => {
         if(err){
             return res.status(400).json({
                 error: true,
                 message: 'Unable to update password!'
             })
-        } else {
+        } else if (!doc){
+            return res.status(200).json({
+                error: false,
+                message: 'User not found!'
+            })
+        }else {
             bcrypt.compare(currPassword, doc.password).then(isMatch => {
                 if(isMatch){
                     bcrypt.genSalt(10, (err, salt)=>{
@@ -143,6 +150,105 @@ router.post('/updatepassword', (req, res) => {
         }
     })
 
+})
+
+
+// Update name of user
+router.post('/updatename', (req, res) => {
+    const {email, newName} = req.body
+
+    userModel.findOneAndUpdate({email: email, is_deleted: false}, {name: newName}, (err, doc) => {
+        if(err){
+            return res.status(400).json({
+                error: true,
+                message: err.message,
+                data: err
+            })
+        } else {
+            return res.status(200).json({
+                error: false,
+                message: 'Name updated successfully!'
+            })
+        }
+    })
+})
+
+
+// Delete user
+router.post('/deleteuser', (req, res) => {
+    const email = req.body.email
+    userModel.findOneAndUpdate({email: email, is_deleted: false}, {is_deleted: true}, (err, doc) => {
+        if(err){
+            return res.status(400).json({
+                error: true,
+                message: err.message
+            })
+        } else {
+            return res.status(200).json({
+                error: false,
+                message: 'Soft delete successful!'
+            })
+        }
+    })
+})
+
+// Undo delete user
+router.post('/undodeleteuser', (req, res) => {
+    const email = req.body.email
+    userModel.findOneAndUpdate({email: email, is_deleted: true}, {is_deleted: false}, (err, doc) => {
+        if(err){
+            return res.status(400).json({
+                error: true,
+                message: err.message
+            })
+        } else {
+            return res.status(200).json({
+                error: false,
+                message: 'Undo delete successful!'
+            })
+        }
+    })
+})
+
+// Get all users
+router.get('/usersall', (req, res) => {
+    userModel.find({is_deleted: false}, (err, docs) => {
+        if(err){
+            return res.status(400).json({
+                error: true,
+                message: err.message
+            })
+        } else if(docs.length==0){
+            return res.status(200).json({
+                error: false,
+                message: 'No users found!'
+            })
+        }else {
+            return res.status(200).json({
+                error: false,
+                message: 'Found registered users!',
+                data: docs
+            })
+        }
+    })
+})
+
+// Get deleted users
+router.get('/getdeletedusers', (req, res) => {
+    userModel.find({is_deleted: true}, (err, docs) => {
+        if(err){
+            res.status(400).json({
+                error: true,
+                message: err.message
+            })
+        } else {
+            res.status(200).json({
+                error: false,
+                message: 'Found deleted users!',
+                data: docs
+            })
+        }
+    })
 })
 
 module.exports = router
