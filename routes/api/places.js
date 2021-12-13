@@ -43,7 +43,7 @@ router.get('/getallplaces', (req, res) => {
     })
 })
 
-// Get nearby places
+// Get nearby places within a 10km radius
 router.get('/getnearby', (req, res) => {
     const {lon, lat} = req.body
 
