@@ -47,7 +47,11 @@ router.get('/getapprovedplaces', (req, res) => {
 router.get('/getnearby', (req, res) => {
     const {lon, lat} = req.body
 
+<<<<<<< HEAD
     placeModel.find({is_deleted: false, is_approved: true}).and([
+=======
+    placeModel.find({is_deleted: false}).and([
+>>>>>>> 95b7a73a1b14e4d422dae82bda7363639548b24e
         {$and:[{lat: {$gte: Number(lat)-0.09009}},{lat: {$lte: Number(lat)+0.09009}}]},
         {$and:[{lon: {$gte: Number(lon)-0.09009}},{lon: {$lte: Number(lon)+0.09009}}]}
     ]).exec((err, docs) => {
