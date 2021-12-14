@@ -47,7 +47,7 @@ router.get('/getallplaces', (req, res) => {
 router.get('/getnearby', (req, res) => {
     const {lon, lat} = req.body
 
-    placeModel.find().and([
+    placeModel.find({is_deleted: false}).and([
         {$and:[{lat: {$gte: Number(lat)-0.09009}},{lat: {$lte: Number(lat)+0.09009}}]},
         {$and:[{lon: {$gte: Number(lon)-0.09009}},{lon: {$lte: Number(lon)+0.09009}}]}
     ]).exec((err, docs) => {
