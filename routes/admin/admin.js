@@ -17,9 +17,22 @@ router.post('/deleteuser', (req, res) => {
                 message: err.message
             })
         } else {
-            return res.status(200).json({
-                error: false,
-                message: 'Soft delete successful!'
+            // return res.status(200).json({
+            //     error: false,
+            //     message: 'Soft delete successful!'
+            // })
+            reviewModel.updateMany({author: doc._id}, {is_deleted: true}, (err, reviews) => {
+                if(err){
+                    return res.status(400).json({
+                        error: true,
+                        message: err.message
+                    })
+                } else {
+                    return res.status(200).json({
+                        error: false,
+                        message: 'Soft delete successful!'
+                    })
+                }
             })
         }
     })
@@ -200,3 +213,8 @@ router.post('/restoreplace', (req, res) => {
 
 
 //--------------------------------------    REVIEWS   --------------------------------------
+
+
+
+
+module.exports = router

@@ -5,6 +5,7 @@ const passport = require('passport')
 const users = require('./routes/api/users')
 const places = require('./routes/api/places')
 const reviews = require('./routes/api/review')
+const admin = require('./routes/admin/admin')
 
 const app = express()
 app.use(express.urlencoded({extended: true}))
@@ -22,6 +23,7 @@ require('./config/passport')(passport)
 app.use('/api/users', users)
 app.use('/api/places', places)
 app.use('/api/reviews', reviews)
+app.use('/admin', admin)
 
 const port = 9002 || process.env.PORT
 app.listen(port, () => console.log('Server is live on port ' + port + '!'))
