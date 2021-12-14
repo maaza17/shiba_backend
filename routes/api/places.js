@@ -26,8 +26,8 @@ router.post('/addplace', (req, res) => {
 })
 
 // Get all places
-router.get('/getallplaces', (req, res) => {
-    placeModel.find({is_deleted: false}, (err, docs) => {
+router.get('/getapprovedplaces', (req, res) => {
+    placeModel.find({is_deleted: false, is_approved: true}, (err, docs) => {
         if(err){
             return res.status(400).json({
                 error: true,
@@ -47,7 +47,7 @@ router.get('/getallplaces', (req, res) => {
 router.get('/getnearby', (req, res) => {
     const {lon, lat} = req.body
 
-    placeModel.find().and([
+    placeModel.find({is_deleted: false, is_approved: true}).and([
         {$and:[{lat: {$gte: Number(lat)-0.09009}},{lat: {$lte: Number(lat)+0.09009}}]},
         {$and:[{lon: {$gte: Number(lon)-0.09009}},{lon: {$lte: Number(lon)+0.09009}}]}
     ]).exec((err, docs) => {
@@ -61,25 +61,6 @@ router.get('/getnearby', (req, res) => {
                 error: false,
                 message: 'Places within 10km found!',
                 data: docs
-            })
-        }
-    })
-})
-
-// Delete place
-router.post('/deleteplace', (req, res) => {
-    const _id = req.body._id
-
-    placeModel.findOneAndUpdate({_id: _id, is_deleted: false}, {is_deleted: true}, (err, doc) => {
-        if(err){
-            return res.status(400).json({
-                error: true,
-                message: err.message
-            })
-        } else {
-            return res.status(200).json({
-                error: false,
-                message: 'Soft delete successful!'
             })
         }
     })
