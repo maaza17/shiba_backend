@@ -99,6 +99,24 @@ router.get('/getdeletedusers', (req, res) => {
 
 
 //--------------------------------------    PLACES   --------------------------------------
+// get all places
+router.get('/getallplaces', (req, res) => {
+    placeModel.find({}, (err, docs) => {
+        if(err){
+            return res.status(400).json({
+                error: true,
+                message: err.message
+            })
+        } else {
+            return res.status(200).json({
+                error: false,
+                message: 'Places found!',
+                data: docs
+            })
+        }
+    })
+})
+
 // get pending not deleted places
 router.get('/getpendingnotdeletedplaces', (req, res) => {
     placeModel.find({is_deleted: false, is_approved: false}, (err, docs) => {
