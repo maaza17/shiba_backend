@@ -12,21 +12,52 @@ const validateLoginInput = require("../../validation/login");
 const userModel = require("../../models/User");
 const passport = require("passport");
 
+router.post("/getprofile", (req, res) => {
+  jwt.verify(req.body.token, keys.secretOrKey, function (err, decoded) {
+    if (err) {
+      return res
+        .status(200)
+        .json({ success: false, message: "Unable to fetch profile" });
+    }
+    if (decoded) {
+      const id = decoded.id;
+      userModel.findOne({ _id: id, is_deleted: false }).then((user) => {
+        if (user) {
+          return res
+            .status(200)
+            .json({
+              success: true,
+              data: user,
+              message: "Here you go good sir",
+            });
+        } else {
+          return res
+            .status(200)
+            .json({ success: false, message: "Unable to fetch profile" });
+        }
+      });
+    }
+  });
+});
+
 // Register POST Route
 // @route POST api/users/register
 // @desc Register user
 // @access Public
 router.post("/register", (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
-    console.log(req.body)
   // Check validation
   if (!isValid) {
-    return res.status(200).json({ success: false, message: "Invalid Data Entered" });
+    return res
+      .status(200)
+      .json({ success: false, message: "Invalid Data Entered" });
   }
 
   userModel.findOne({ email: req.body.email }, (err, user) => {
     if (user) {
-      return res.status(200).json({ success: false, message: "Email already in use!" });
+      return res
+        .status(200)
+        .json({ success: false, message: "Email already in use!" });
     } else {
       const newUser = new userModel({
         name: req.body.name,
@@ -43,12 +74,17 @@ router.post("/register", (req, res) => {
             .save()
             .then((user) =>
               res.status(200).json({
-                  success:true,
+                success: true,
                 error: false,
+                user:user,
                 message: "User successfully registered!",
               })
             )
-            .catch((err) => {return res.status(200).json({success: false, message:"Please try agin later"})});
+            .catch((err) => {
+              return res
+                .status(200)
+                .json({ success: false, message: "Please try agin later" });
+            });
         });
       });
     }
@@ -92,7 +128,7 @@ router.post("/login", (req, res) => {
           (err, token) => {
             res.json({
               success: true,
-              token: "Bearer " + token,
+              token: token,
             });
           }
         );
