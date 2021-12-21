@@ -45,7 +45,7 @@ router.post("/deleteuser", (req, res) => {
   );
 });
 
-// Delete user
+// Edit user points
 router.post("/editpoints", (req, res) => {
   const email = req.body.email;
   const rewardPoints = req.body.rewardPoints;
@@ -265,6 +265,58 @@ router.post("/restoreplace", (req, res) => {
     }
   );
 });
+
+
+// Approve place
+router.post('/approveplace', (req, res) => {
+    const placeid = req.body._id
+
+    placeModel.findOne({_id: placeid, is_deleted: false}, (err, doc) => {
+        if(err){
+            return res.status.status(400).json({
+                error: true,
+                message: err.message
+            })
+        } else {
+            const temp = doc
+            temp.is_approved = true
+            temp.save((error, place) => {
+                if(error){
+                    return res.status(400).json({
+                        error: true,
+                        message: error.message
+                    })
+                } else {
+                    const userid = place.createdBy
+                    userModel.findOne({_id: userid}, (error2, user) => {
+                        if(error2){
+                            return res.status(400).json({
+                                error: true,
+                                message: error2.message
+                            })
+                        } else {
+                            user.rewardPoints += 20
+                            user.save((error3, updatedUser) => {
+                                if(error3) {
+                                    return res.status(400).json({
+                                        error: true,
+                                        message: error3.message
+                                    })
+                                } else {
+                                    return res.status(200).json({
+                                        error: false,
+                                        message: 'Successuflly updated place and awarded points to author.'
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+        }
+    })
+})
+
 
 //--------------------------------------    REVIEWS   --------------------------------------
 
