@@ -6,7 +6,7 @@ const placeSchema = ({
         type: String,
         required: true,
     },
-    lon: {
+    lng: {
         type: Number,
         required: true
     },

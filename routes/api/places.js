@@ -6,7 +6,7 @@ const placeModel = require('../../models/Place')
 // Add place
 router.post('/addplace', (req, res) => {
     
-    const newPlace = new placeModel({place_name: req.body.place_name, lon: req.body.lon, lat: req.body.lat, category: req.body.category,
+    const newPlace = new placeModel({place_name: req.body.place_name, lng: req.body.lng, lat: req.body.lat, category: req.body.category,
         images: req.body.images, desc: req.body.desc, website: req.body.website, createdBy: req.body.createdBy})
     
     newPlace.save((err, place) => {
@@ -45,11 +45,11 @@ router.get('/getapprovedplaces', (req, res) => {
 
 // Get nearby places within a 10km radius
 router.get('/getnearby', (req, res) => {
-    const {lon, lat} = req.body
+    const {lng, lat} = req.body
 
     placeModel.find({is_deleted: false, is_approved: true}).and([
         {$and:[{lat: {$gte: Number(lat)-0.09009}},{lat: {$lte: Number(lat)+0.09009}}]},
-        {$and:[{lon: {$gte: Number(lon)-0.09009}},{lon: {$lte: Number(lon)+0.09009}}]}
+        {$and:[{lng: {$gte: Number(lng)-0.09009}},{lng: {$lte: Number(lng)+0.09009}}]}
     ]).exec((err, docs) => {
         if(err){
             return res.status(400).json({
