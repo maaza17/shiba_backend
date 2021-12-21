@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
-// const userSchema = require('./User')
+const userSchema = require('./User')
+const placeSchema = require('./Place')
 
 const reviewSchema = new mongoose.Schema({
     author: {

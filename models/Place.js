@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-// const userSchema = require('./User')
+const userSchema = require('./User')
 
 const placeSchema = ({
     place_name: {
@@ -44,8 +44,7 @@ const placeSchema = ({
     },
     createdBy:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'userSchema',
-        default: null
+        ref: 'userSchema'
     },
     created_at: {
         type: Date,
