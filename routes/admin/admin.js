@@ -206,7 +206,7 @@ router.get("/getapprovednotdeletedplaces", (req, res) => {
 
 // get approved deleted places
 router.get("/getapproveddeletedplaces", (req, res) => {
-  placeModel.find({ is_deleted: true, is_approved: false }, (err, docs) => {
+  placeModel.find({ is_deleted: true, is_approved: true }, (err, docs) => {
     if (err) {
       return res.status(400).json({
         error: true,
@@ -228,7 +228,7 @@ router.post("/deleteplace", (req, res) => {
 
   placeModel.findOneAndUpdate(
     { _id: _id, is_deleted: false },
-    { is_deleted: true, is_approved: false },
+    { is_deleted: true },
     (err, doc) => {
       if (err) {
         return res.status(400).json({
@@ -247,9 +247,10 @@ router.post("/deleteplace", (req, res) => {
 
 // Restore place
 router.post("/restoreplace", (req, res) => {
+  const _id = req.body._id;
   placeModel.findOneAndUpdate(
     { _id: _id, is_deleted: true },
-    { is_deleted: false, is_approved: false },
+    { is_deleted: false },
     (err, doc) => {
       if (err) {
         return res.status(400).json({
@@ -266,57 +267,77 @@ router.post("/restoreplace", (req, res) => {
   );
 });
 
-
 // Approve place
-router.post('/approveplace', (req, res) => {
-    const placeid = req.body._id
+router.post("/approveplace", (req, res) => {
+  const placeid = req.body._id;
 
-    placeModel.findOne({_id: placeid, is_deleted: false}, (err, doc) => {
-        if(err){
-            return res.status.status(400).json({
+  placeModel.findOne({ _id: placeid }, (err, doc) => {
+    if (err) {
+      return res.status(400).json({
+        error: true,
+        message: err.message,
+      });
+    } else if (doc) {
+      const temp = doc;
+      temp.is_approved = true;
+      temp.save((error, place) => {
+        if (error) {
+          return res.status(400).json({
+            error: true,
+            message: error.message,
+          });
+        } else if (place) {
+          const userid = place.createdBy;
+          userModel.findOne({ _id: userid }, (error2, user) => {
+            if (error2) {
+              return res.status(400).json({
                 error: true,
-                message: err.message
-            })
-        } else {
-            const temp = doc
-            temp.is_approved = true
-            temp.save((error, place) => {
-                if(error){
-                    return res.status(400).json({
-                        error: true,
-                        message: error.message
-                    })
+                message: error2.message,
+              });
+            } else if (user) {
+              user.rewardPoints += 20;
+              user.save((error3, updatedUser) => {
+                if (error3) {
+                  return res.status(400).json({
+                    error: true,
+                    message: error3.message,
+                  });
+                } else if (updatedUser) {
+                  return res.status(200).json({
+                    error: false,
+                    message:
+                      "Successuflly updated place and awarded points to author.",
+                  });
                 } else {
-                    const userid = place.createdBy
-                    userModel.findOne({_id: userid}, (error2, user) => {
-                        if(error2){
-                            return res.status(400).json({
-                                error: true,
-                                message: error2.message
-                            })
-                        } else {
-                            user.rewardPoints += 20
-                            user.save((error3, updatedUser) => {
-                                if(error3) {
-                                    return res.status(400).json({
-                                        error: true,
-                                        message: error3.message
-                                    })
-                                } else {
-                                    return res.status(200).json({
-                                        error: false,
-                                        message: 'Successuflly updated place and awarded points to author.'
-                                    })
-                                }
-                            })
-                        }
-                    })
+                  return res.status(200).json({
+                    error: false,
+                    message:
+                      "Successuflly updated place but an error occured in rewarding points.",
+                  });
                 }
-            })
+              });
+            } else {
+              return res.status(200).json({
+                error: false,
+                message: "Successuflly updated place but no author found.",
+              });
+            }
+          });
+        } else {
+          return res.status(200).json({
+            error: false,
+            message: "Could not save changes. Please try again later..",
+          });
         }
-    })
-})
-
+      });
+    } else {
+      return res.status(200).json({
+        error: false,
+        message: "Unfortunately, No such place found..",
+      });
+    }
+  });
+});
 
 //--------------------------------------    REVIEWS   --------------------------------------
 
