@@ -339,6 +339,78 @@ router.post("/approveplace", (req, res) => {
   });
 });
 
+
+// Approve place
+router.post("/disapproveplace", (req, res) => {
+  const placeid = req.body._id;
+  placeModel.findOne({ _id: placeid }, (err, doc) => {
+    if (err) {
+      return res.status(400).json({
+        error: true,
+        message: err.message,
+      });
+    } else if (doc) {
+      const temp = doc;
+      temp.is_approved = false;
+      temp.save((error, place) => {
+        if (error) {
+          return res.status(400).json({
+            error: true,
+            message: error.message,
+          });
+        } else if (place) {
+          const userid = place.createdBy;
+          userModel.findOne({ _id: userid }, (error2, user) => {
+            if (error2) {
+              return res.status(400).json({
+                error: true,
+                message: error2.message,
+              });
+            } else if (user) {
+              user.rewardPoints = user.rewardPoints - 20;
+              user.save((error3, updatedUser) => {
+                if (error3) {
+                  return res.status(400).json({
+                    error: true,
+                    message: error3.message,
+                  });
+                } else if (updatedUser) {
+                  return res.status(200).json({
+                    error: false,
+                    message:
+                      "Successuflly updated place and deducted points from author.",
+                  });
+                } else {
+                  return res.status(200).json({
+                    error: false,
+                    message:
+                      "Successuflly updated place but an error occured in deducting points.",
+                  });
+                }
+              });
+            } else {
+              return res.status(200).json({
+                error: false,
+                message: "Successuflly updated place but no author found.",
+              });
+            }
+          });
+        } else {
+          return res.status(200).json({
+            error: false,
+            message: "Could not save changes. Please try again later..",
+          });
+        }
+      });
+    } else {
+      return res.status(200).json({
+        error: false,
+        message: "Unfortunately, No such place found..",
+      });
+    }
+  });
+});
+
 //--------------------------------------    REVIEWS   --------------------------------------
 
 module.exports = router;
