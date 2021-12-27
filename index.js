@@ -41,5 +41,5 @@ app.use("/api/places", places);
 app.use("/api/reviews", reviews);
 app.use("/admin", admin);
 
-const port = 9002 || process.env.PORT;
+const port = process.env.PORT;
 app.listen(port, () => console.log("Server is live on port " + port + "!"));
