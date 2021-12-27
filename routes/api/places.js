@@ -60,7 +60,7 @@ router.get("/getapprovedplaces", (req, res) => {
 });
 
 // Get nearby places within a 10km radius
-router.get("/getnearby", (req, res) => {
+router.post("/getnearby", (req, res) => {
   const { lng, lat } = req.body;
 
   placeModel
@@ -68,14 +68,14 @@ router.get("/getnearby", (req, res) => {
     .and([
       {
         $and: [
-          { lat: { $gte: Number(lat) - 0.09009 } },
-          { lat: { $lte: Number(lat) + 0.09009 } },
+          { lat: { $gte: Number(lat) - 0.05009 } },
+          { lat: { $lte: Number(lat) + 0.05009 } },
         ],
       },
       {
         $and: [
-          { lng: { $gte: Number(lng) - 0.09009 } },
-          { lng: { $lte: Number(lng) + 0.09009 } },
+          { lng: { $gte: Number(lng) - 0.05009 } },
+          { lng: { $lte: Number(lng) + 0.05009 } },
         ],
       },
     ])
