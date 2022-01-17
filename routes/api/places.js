@@ -6,6 +6,7 @@ const userModel = require("../../models/User");
 
 // Add place
 router.post("/addplace", (req, res) => {
+  
   userModel.findOne({ email: req.body.createdByEmail }, (error, user) => {
     if (error) {
       return res.status(200).json({
@@ -13,14 +14,26 @@ router.post("/addplace", (req, res) => {
         message: error.message,
       });
     } else if (user) {
+      let webtext = "";
+      if ((req.body.website === "")) {
+        webtext = "Not Available";
+      } else {
+        webtext = req.body.website;
+      }
+      let desctext = "";
+      if ((req.body.desc === "")) {
+        desctext = "Not Available";
+      } else {
+        desctext = req.body.desc;
+      }
       const newPlace = new placeModel({
         place_name: req.body.place_name,
         lng: req.body.lng,
         lat: req.body.lat,
         category: req.body.category,
         images: req.body.images,
-        desc: req.body.desc,
-        website: req.body.website,
+        desc: desctext,
+        website: webtext,
         createdBy: user._id,
       });
       newPlace.save((err, place) => {
