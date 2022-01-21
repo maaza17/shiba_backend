@@ -6,7 +6,6 @@ const userModel = require("../../models/User");
 
 // Add place
 router.post("/addplace", (req, res) => {
-  
   userModel.findOne({ email: req.body.createdByEmail }, (error, user) => {
     if (error) {
       return res.status(200).json({
@@ -15,13 +14,13 @@ router.post("/addplace", (req, res) => {
       });
     } else if (user) {
       let webtext = "";
-      if ((req.body.website === "")) {
+      if (req.body.website === "") {
         webtext = "Not Available";
       } else {
         webtext = req.body.website;
       }
       let desctext = "";
-      if ((req.body.desc === "")) {
+      if (req.body.desc === "") {
         desctext = "Not Available";
       } else {
         desctext = req.body.desc;
@@ -54,7 +53,7 @@ router.post("/addplace", (req, res) => {
   });
 });
 
-// Get all places
+// Get approved places
 router.get("/getapprovedplaces", (req, res) => {
   placeModel.find({ is_deleted: false, is_approved: true }, (err, docs) => {
     if (err) {
@@ -68,6 +67,33 @@ router.get("/getapprovedplaces", (req, res) => {
         message: "Places found!",
         data: docs,
       });
+    }
+  });
+});
+
+// Get approved places for one user
+router.get("/getapprovedplacesforoneuser", (req, res) => {
+  userModel.findOne({ email: req.body.createdByEmail }, (error, user) => {
+    if (error) {
+      return res.status(200).json({
+        error: true,
+        message: error.message,
+      });
+    } else if (user) {
+        placeModel.find({ createdBy: user._id , is_approved: true }, (err, docs) => {
+          if (err) {
+            return res.status(400).json({
+              error: true,
+              message: err.message,
+            });
+          } else {
+            return res.status(200).json({
+              error: false,
+              message: "Places found!",
+              data: docs,
+            });
+          }
+        });
     }
   });
 });
