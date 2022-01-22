@@ -3,6 +3,7 @@ const router = express.Router();
 
 const placeModel = require("../../models/Place");
 const userModel = require("../../models/User");
+const transport = require('../../config/nodemailer')
 
 // Add place
 router.post("/addplace", (req, res) => {
@@ -42,10 +43,28 @@ router.post("/addplace", (req, res) => {
             message: err.message,
           });
         } else {
-          return res.status(200).json({
-            error: false,
-            message: "Place added! Pending approval",
-            data: place,
+          // Send Mail to admin for new added request.
+          var mailOptions = {
+            from: '"Shiba Inu Server" <from@example.com>',
+            to: 'user1@example.com',
+            subject: 'Request: Add New Place',
+            // text: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum',
+            html: '<b>Hey there! </b><br> This is our first message sent with Nodemailer'
+          };
+
+          transport.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              return res.status(200).json({
+                error: true,
+                message: error.message,
+              });
+            }
+            console.log('Message sent: %s', info.messageId);
+            return res.status(200).json({
+              error: false,
+              message: "Place added! Pending approval",
+              data: place,
+            });
           });
         }
       });
