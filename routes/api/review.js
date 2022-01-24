@@ -62,7 +62,7 @@ router.post("/addreview", (req, res) => {
 
 // get review by place
 router.get("/getplacereviews", (req, res) => {
-  placeModel.find({ place: req.body.place }, (err, docs) => {
+  reviewModel.find({ place: req.body.place }, (err, docs) => {
     if (err) {
       return res.status(400).json({
         error: true,
