@@ -49,7 +49,7 @@ router.post("/addplace", (req, res) => {
             to: 'user1@example.com',
             subject: 'Request: Add New Place',
             // text: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum',
-            html: '<body><h2>Hello Admin</h2><p> A request for place has been put up and is pending your approval. Please follow the link below to login.</p><a href="http://www.demo.shibfinder.com/login">Login Here</a></body>'
+            html: '<body><h2>Hello Admin</h2><p> A request for place has been put up and is pending your approval. Please follow the link below to login.</p><a href="http://www.shiba.bilalmohsin.com/login">Login Here</a></body>'
           };
 
           transport.sendMail(mailOptions, (error, info) => {
