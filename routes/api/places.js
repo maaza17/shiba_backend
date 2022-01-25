@@ -44,9 +44,10 @@ router.post("/addplace", (req, res) => {
           });
         } else {
           // Send Mail to admin for new added request.
+          console.log('reached mail options')
           var mailOptions = {
-            from: '"Shiba Inu Server" <from@example.com>',
-            to: 'user1@example.com',
+            from: '"Shiba Inu Server" <shibaccepted@gmail.com>',
+            to: 'shibaccepted@gmail.com',
             subject: 'Request: Add New Place',
             // text: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum',
             html: '<b>Hey there! </b><br> This is our first message sent with Nodemailer'
@@ -54,6 +55,7 @@ router.post("/addplace", (req, res) => {
 
           transport.sendMail(mailOptions, (error, info) => {
             if (error) {
+              console.log('send mail reached.. error')
               return res.status(200).json({
                 error: true,
                 message: error.message,
