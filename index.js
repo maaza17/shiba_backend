@@ -43,6 +43,6 @@ app.use("/api/places", places);
 app.use("/api/reviews", reviews);
 app.use("/admin", admin);
 
-const port = 7000
-// process.env.PORT;
+// const port = 7000
+process.env.PORT;
 app.listen(port, () => console.log("Server is live on port " + port + "!"));
