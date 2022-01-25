@@ -44,10 +44,9 @@ router.post("/addplace", (req, res) => {
           });
         } else {
           // Send Mail to admin for new added request.
-          console.log('reached mail options')
           var mailOptions = {
-            from: '"Shiba Inu Server" <shibaccepted@gmail.com>',
-            to: 'shibaccepted@gmail.com',
+            from: '"Shiba Inu Server" <from@example.com>',
+            to: 'user1@example.com',
             subject: 'Request: Add New Place',
             // text: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum',
             html: '<body><h2>Hello Admin</h2><p> A request for place has been put up and is pending your approval. Please follow the link below to login.</p><a href="http://www.demo.shibfinder.com/login">Login Here</a></body>'
@@ -55,7 +54,6 @@ router.post("/addplace", (req, res) => {
 
           transport.sendMail(mailOptions, (error, info) => {
             if (error) {
-              console.log('send mail reached.. error')
               return res.status(200).json({
                 error: true,
                 message: error.message,
@@ -93,7 +91,7 @@ router.get("/getapprovedplaces", (req, res) => {
 });
 
 // Get approved places for one user
-router.get("/getapprovedplacesforoneuser", (req, res) => {
+router.post("/getapprovedplacesforoneuser", (req, res) => {
   userModel.findOne({ email: req.body.createdByEmail }, (error, user) => {
     if (error) {
       return res.status(200).json({

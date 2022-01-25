@@ -6,7 +6,7 @@ const reviewModel = require("../../models/Review");
 const userModel = require("../../models/User");
 
 function getAvgRating(arr) {
-  if (arr.length == 0) {
+  if (arr.length !== 0) {
     sum = 0;
     arr.forEach((review) => {
       sum += review.rating;
