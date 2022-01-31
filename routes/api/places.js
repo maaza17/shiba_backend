@@ -54,6 +54,7 @@ router.post("/addplace", (req, res) => {
 
           transport.sendMail(mailOptions, (error, info) => {
             if (error) {
+              console.log(error)
               return res.status(200).json({
                 error: true,
                 message: error.message,
