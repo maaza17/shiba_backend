@@ -45,8 +45,8 @@ router.post("/addplace", (req, res) => {
         } else {
           // Send Mail to admin for new added request.
           var mailOptions = {
-            from: '"Shiba Inu Server" <from@example.com>',
-            to: 'user1@example.com',
+            from: '"Shiba Inu Server" <shibaccepted@gmail.com>',
+            to: 'shibaccepted@gmail.com',
             subject: 'Request: Add New Place',
             // text: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum',
             html: '<body><h2>Hello Admin</h2><p> A request for place has been put up and is pending your approval. Please follow the link below to login.</p><a href="http://www.shiba.bilalmohsin.com/login">Login Here</a></body>'
