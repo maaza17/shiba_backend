@@ -1,6 +1,6 @@
 module.exports = {
-    mongoURI: "mongodb+srv://root:qwertyshiba123@shibainu.jnhhl.mongodb.net/shibainudb?retryWrites=true&w=majority",
+    mongoURI: "mongodb+srv://root:OEGHXikU513qvawS@shibaccepted.0reac.mongodb.net/shibfinder?retryWrites=true&w=majority",
     secretOrKey: 'superconfidentialrandomsecretdonotshareshushhhh',
-    nodemaileruser: "shibaccepted@gmail.com",
-    nodemailerpass: "qwerty@shibainu##"
+    nodemaileruser: "shibfinder@gmail.com",
+    nodemailerpass: "PassForDaniel123@"
 }

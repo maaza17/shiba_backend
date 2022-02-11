@@ -45,11 +45,10 @@ router.post("/addplace", (req, res) => {
         } else {
           // Send Mail to admin for new added request.
           var mailOptions = {
-            from: '"Shiba Inu Server" <shibaccepted@gmail.com>',
-            to: 'shibaccepted@gmail.com',
-            subject: 'Request: Add New Place',
-            // text: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum',
-            html: '<body><h2>Hello Admin</h2><p> A request for place has been put up and is pending your approval. Please follow the link below to login.</p><a href="http://www.shiba.bilalmohsin.com/login">Login Here</a></body>'
+            from: '"Shib Finder Server" <shibaccepted@gmail.com>',
+            to: 'shibfinder@gmail.com',
+            subject: 'ShibFinder.com: Add New Place',
+            html: '<body><h2>Hello Admin</h2><p> A request for place has been put up and is pending your approval. Please follow the link below:</p><a href="http://www.shibfinder.com">www.shibfinder.com</a></body>'
           };
 
           transport.sendMail(mailOptions, (error, info) => {
